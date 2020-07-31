@@ -27,19 +27,19 @@ module cp0_reg(
     input  wire [`STALL_BUS   ] stall
     );
 
-	reg [`REG_BUS] badvaddr;	// CP0µÄbadvaddr¼Ä´æÆ÷
-	reg [`REG_BUS] status;		// CP0µÄstatus¼Ä´æÆ÷
-	reg [`REG_BUS] cause;		// CP0µÄcause¼Ä´æÆ÷
-	reg [`REG_BUS] epc;			// CP0µÄepc¼Ä´æÆ÷
+	reg [`REG_BUS] badvaddr;	// CP0ï¿½ï¿½badvaddrï¿½Ä´ï¿½ï¿½ï¿½
+	reg [`REG_BUS] status;		// CP0ï¿½ï¿½statusï¿½Ä´ï¿½ï¿½ï¿½
+	reg [`REG_BUS] cause;		// CP0ï¿½ï¿½causeï¿½Ä´ï¿½ï¿½ï¿½
+	reg [`REG_BUS] epc;			// CP0ï¿½ï¿½epcï¿½Ä´ï¿½ï¿½ï¿½
 
 	assign status_o = status;
 	assign cause_o = cause;
 
-    // ¸ù¾ÝÒì³£ÐÅÏ¢Éú³ÉÇå¿ÕÁ÷Ë®ÏßÐÅºÅflush
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Åºï¿½flush
     assign flush = (cpu_rst_n == `RST_ENABLE) ? `NOFLUSH : 
                    (exccode_i != `EXC_NONE ) ? `FLUSH : `NOFLUSH;
 
-	// Éú³ÉÇå¿Õ´ÓÖ¸Áî´æ´¢Æ÷IMÖÐÈ¡³öµÄÖ¸ÁîµÄÐÅºÅflush_im
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ´ï¿½Ö¸ï¿½ï¿½æ´¢ï¿½ï¿½IMï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Åºï¿½flush_im
     always @(posedge cpu_clk_50M) begin
         if (cpu_rst_n == `RST_ENABLE) begin
 			flush_im <= `NOFLUSH;
@@ -50,11 +50,11 @@ module cp0_reg(
 		end
     end
 
-    // ´¦ÀíÒì³£
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ì³£
     task do_exc; begin
 		if (status[1] == 0) begin
-			if(in_delay_i) begin        // ÅÐ¶ÏÒì³£·¢ÉúÖ¸ÁîÊÇ·ñÎªÑÓ³Ù²ÛÖ¸Áî
-				cause[31] <= 1;   		// ÈôÎªÑÓ³Ù²ÛÖ¸Áî£¬cause[31]ÖÃÎª1
+			if(in_delay_i) begin        // ï¿½Ð¶ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½Ó³Ù²ï¿½Ö¸ï¿½ï¿½
+				cause[31] <= 1;   		// ï¿½ï¿½Îªï¿½Ó³Ù²ï¿½Ö¸ï¿½î£¬cause[31]ï¿½ï¿½Îª1
 				epc       <= pc_i - 4;
 			end else begin	
 				cause[31] <= 0;
@@ -68,24 +68,24 @@ module cp0_reg(
 	end
 	endtask
 
-    // ´¦ÀíERETÖ¸Áî
+    // ï¿½ï¿½ï¿½ï¿½ERETÖ¸ï¿½ï¿½
 	task do_eret; begin
 		status[1]   <= 0;
 	end
 	endtask
 
-	// ²úÉúÒì³£´¦Àí³ÌÐòÈë¿ÚµØÖ·
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ö·
 	assign cp0_excaddr = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
 						 (exccode_i == `EXC_INT   ) ? `EXC_INT_ADDR :
 						 (exccode_i == `EXC_ERET && waddr == `CP0_EPC && we == `WRITE_ENABLE) ? wdata :
 						 (exccode_i == `EXC_ERET  ) ? epc :
 						 (exccode_i != `EXC_NONE  ) ? `EXC_ADDR : `ZERO_WORD;
 
-    // ¸üÐÂCP0¼Ä´æÆ÷Êý¾Ý
+    // ï¿½ï¿½ï¿½ï¿½CP0ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     always @ (posedge cpu_clk_50M) begin
 		if(cpu_rst_n == `RST_ENABLE) begin
             badvaddr 	  <= `ZERO_WORD;
-            status 	      <= 32'h10000000;              // status[28]Îª1£¬±íÊ¾Ê¹ÄÜCP0Ð­´¦ÀíÆ÷
+            status 	      <= 32'h10000000;              // status[28]Îª1ï¿½ï¿½ï¿½ï¿½Ê¾Ê¹ï¿½ï¿½CP0Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             cause 	      <= `ZERO_WORD;
             epc 		  <= `ZERO_WORD;
 		end 
@@ -93,7 +93,7 @@ module cp0_reg(
         begin
 			cause[15:10] <= int_i;
 			case (exccode_i)
-				`EXC_NONE:       // ÎÞÒì³£·¢ÉúÊ±£¬ÅÐ¶ÏÊÇ·ñÎªÐ´¼Ä´æÆ÷Ö¸Áî£¬Ð´ÈëÊý¾Ý
+				`EXC_NONE:       // ï¿½ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ÎªÐ´ï¿½Ä´ï¿½ï¿½ï¿½Ö¸ï¿½î£¬Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if (we == `WRITE_ENABLE) begin
 						case(waddr)
 						 	`CP0_BADVADDR: badvaddr <= wdata;
@@ -102,15 +102,15 @@ module cp0_reg(
 						 	`CP0_EPC: epc       <= wdata;
 						endcase
 					end
-				`EXC_ERET:       // ERETÖ¸Áî
+				`EXC_ERET:       // ERETÖ¸ï¿½ï¿½
 					do_eret();
-				default:        // Òì³£·¢ÉúÊ±£¬´¦Àí¶ÔÓ¦Òì³£
+				default:        // ï¿½ì³£ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ì³£
 					do_exc();
 			endcase
 		end
 	end
 
-	// ¶ÁCP0ÖÐµÄ¼Ä´æÆ÷
+	// ï¿½ï¿½CP0ï¿½ÐµÄ¼Ä´ï¿½ï¿½ï¿½
     assign data_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : 
                     (re != `READ_ENABLE      ) ? `ZERO_WORD :
                     (raddr == `CP0_BADVADDR  ) ? badvaddr :

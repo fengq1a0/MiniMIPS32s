@@ -3,22 +3,22 @@ module regfile(
     input  wire 				 cpu_clk_50M,
 	input  wire 				 cpu_rst_n,
 	
-	// Ð´¶Ë¿Ú
+	// Ð´ï¿½Ë¿ï¿½
 	input  wire  [`REG_ADDR_BUS] wa,
 	input  wire  [`REG_BUS 	   ] wd,
 	input  wire 				 we,
 	
-	// ¶Á¶Ë¿Ú1
+	// ï¿½ï¿½ï¿½Ë¿ï¿½1
 	input  wire  [`REG_ADDR_BUS] ra1,
 	output reg   [`REG_BUS 	   ] rd1,
 	
-	// ¶Á¶Ë¿Ú2 
+	// ï¿½ï¿½ï¿½Ë¿ï¿½2 
 	input  wire  [`REG_ADDR_BUS] ra2,
 	output reg   [`REG_BUS 	   ] rd2
     );
 wire re1=1;
 wire re2=1;
-    //¶¨Òå32¸ö32Î»¼Ä´æÆ÷
+    //ï¿½ï¿½ï¿½ï¿½32ï¿½ï¿½32Î»ï¿½Ä´ï¿½ï¿½ï¿½
 	reg [`REG_BUS] 	regs[0:`REG_NUM-1];
 	
 	always @(posedge cpu_clk_50M) begin
@@ -62,15 +62,15 @@ wire re2=1;
 		end
 	end
 	
-	//¶Á¶Ë¿Ú1µÄ¶Á²Ù×÷ 
-	// ra1ÊÇ¶ÁµØÖ·¡¢waÊÇÐ´µØÖ·¡¢weÊÇÐ´Ê¹ÄÜ¡¢wdÊÇÒªÐ´ÈëµÄÊý¾Ý 
+	//ï¿½ï¿½ï¿½Ë¿ï¿½1ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ 
+	// ra1ï¿½Ç¶ï¿½ï¿½ï¿½Ö·ï¿½ï¿½waï¿½ï¿½Ð´ï¿½ï¿½Ö·ï¿½ï¿½weï¿½ï¿½Ð´Ê¹ï¿½Ü¡ï¿½wdï¿½ï¿½ÒªÐ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 always @(*) begin
 	if	(cpu_rst_n == `RST_ENABLE)
 		rd1 <= `ZERO_WORD;
 	else if (ra1 == `REG_NOP)
 		rd1 <= `ZERO_WORD;
 	   
-	//ÅÐ¶Ï¶ÔÓÚ¶Á¶Ë¿Ú1ÊÇ·ñ´æÔÚÒëÂëÐ´»ØÏà¹Ø
+	//ï¿½Ð¶Ï¶ï¿½ï¿½Ú¶ï¿½ï¿½Ë¿ï¿½1ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½
 	else if ((re1 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra1))
 	begin
 	   if (wa==5'b0) rd1 <= 32'b0;
@@ -82,15 +82,15 @@ always @(*) begin
 		rd1 <=`ZERO_WORD;
 end
 	
-	//¶Á¶Ë¿Ú2µÄ¶Á²Ù×÷ 
-	// ra2ÊÇ¶ÁµØÖ·¡¢waÊÇÐ´µØÖ·¡¢weÊÇÐ´Ê¹ÄÜ¡¢wdÊÇÒªÐ´ÈëµÄÊý¾Ý 
+	//ï¿½ï¿½ï¿½Ë¿ï¿½2ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ 
+	// ra2ï¿½Ç¶ï¿½ï¿½ï¿½Ö·ï¿½ï¿½waï¿½ï¿½Ð´ï¿½ï¿½Ö·ï¿½ï¿½weï¿½ï¿½Ð´Ê¹ï¿½Ü¡ï¿½wdï¿½ï¿½ÒªÐ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 always @(*) begin
 	if(cpu_rst_n == `RST_ENABLE)
 		rd2 <= `ZERO_WORD;
 	else if (ra2 == `REG_NOP)
 		rd2 <= `ZERO_WORD;
 		
-	//ÅÐ¶Ï¶ÔÓÚ¶Á¶Ë¿Ú2ÊÇ·ñ´æÔÚÒëÂëÐ´»ØÏà¹Ø
+	//ï¿½Ð¶Ï¶ï¿½ï¿½Ú¶ï¿½ï¿½Ë¿ï¿½2ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½
 	else if ((re2 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra2))
 	begin
 	   if (wa==5'b0) rd2 <= 32'b0;

@@ -4,37 +4,37 @@ module ifid_reg(
     input  wire                    cpu_clk_50M,
     input  wire                    cpu_rst_n,
     
-    // Á÷Ë®ÏßÔÝÍ£
+    // ï¿½ï¿½Ë®ï¿½ï¿½ï¿½ï¿½Í£
     input  wire [`STALL_BUS    ]   stall,
     
-    // Çå¿ÕÁ÷Ë®Ïß
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ë®ï¿½ï¿½
     input wire                     flush,
     
-    // À´×ÔÈ¡Ö¸½×¶ÎµÄÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½È¡Ö¸ï¿½×¶Îµï¿½ï¿½ï¿½Ï¢
     input  wire [`INST_ADDR_BUS]   if_pc,
     input  wire [`INST_ADDR_BUS]   if_pc_plus_4,
     input  wire [`EXC_CODE_BUS ]   if_exccode,
     
-    // ËÍÖÁÒëÂë½×¶ÎµÄÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶Îµï¿½ï¿½ï¿½Ï¢
     output reg  [`INST_ADDR_BUS]   id_pc,
     output reg  [`INST_ADDR_BUS]   id_pc_plus_4,
     output reg  [`EXC_CODE_BUS ]   id_exccode
     );
     
     always @(posedge cpu_clk_50M) begin
-        // ¸´Î»µÄÊ±ºò½«ËÍÖÁÒëÂë½×¶ÎµÄÐÅÏ¢Çå0
+        // ï¿½ï¿½Î»ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶Îµï¿½ï¿½ï¿½Ï¢ï¿½ï¿½0
         if (cpu_rst_n == `RST_ENABLE || flush) begin
             id_pc        <= `PC_INIT;
             id_pc_plus_4 <= `PC_INIT;
             id_exccode   <= `EXC_NONE;
         end
-        // ifÍ£Ö¹ÁËµ«idÃ»ÔÝÍ£
+        // ifÍ£Ö¹ï¿½Ëµï¿½idÃ»ï¿½ï¿½Í£
         else if(stall[1] == `STOP && stall[2] == `NOSTOP) begin
             id_pc        <= `PC_INIT;
             id_pc_plus_4 <= `PC_INIT;
             id_exccode   <= `EXC_NONE;
         end
-        // ½«À´×ÔÈ¡Ö¸½×¶ÎµÄÐÅÏ¢¼Ä´æ²¢ËÍÖÁÒëÂë½×¶Î
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Ö¸ï¿½×¶Îµï¿½ï¿½ï¿½Ï¢ï¿½Ä´æ²¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶ï¿½
         else if(stall[1] == `NOSTOP) begin
             id_pc        <= if_pc;
             id_pc_plus_4 <= if_pc_plus_4;
