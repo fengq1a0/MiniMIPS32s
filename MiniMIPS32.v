@@ -26,10 +26,10 @@ module MiniMIPS32(
     assign ostall = stall;
     wire [`WORD_BUS      ] pc;
 
-    // ¡¨Ω”IF/IDƒ£øÈ”Î“Î¬ÎΩ◊∂ŒIDƒ£øÈµƒ±‰¡ø 
+    // ËøûÊé•IF/IDÊ®°Âùó‰∏éËØëÁ†ÅÈò∂ÊÆµIDÊ®°ÂùóÁöÑÂèòÈáè 
     wire [`WORD_BUS      ] id_pc_i;
     
-    // ¡¨Ω”“Î¬ÎΩ◊∂ŒIDƒ£øÈ”ÎÕ®”√ºƒ¥Ê∆˜Regfileƒ£øÈµƒ±‰¡ø
+    // ËøûÊé•ËØëÁ†ÅÈò∂ÊÆµIDÊ®°Âùó‰∏éÈÄöÁî®ÂØÑÂ≠òÂô®RegfileÊ®°ÂùóÁöÑÂèòÈáè
     wire [`REG_ADDR_BUS  ] ra1;
     wire [`REG_BUS       ] rd1;
     wire [`REG_ADDR_BUS  ] ra2;
@@ -142,7 +142,7 @@ module MiniMIPS32(
 	wire [`REG_BUS 	     ] status_o;
 	wire [`REG_BUS 	     ] cause_o;
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
     wire [`WORD_BUS      ] id_pc_o;
     wire [`WORD_BUS      ] exe_pc_i;
     wire [`WORD_BUS      ] exe_pc_o;
@@ -168,10 +168,10 @@ module MiniMIPS32(
     
     wire [`EXC_CODE_BUS]   if_exccode;
     wire [`EXC_CODE_BUS]   id_exccode;
-/************************“Ï≥£¥¶¿Ì end*********************************/    
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/    
 
 
-    if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
+    if_stage if_stage0(.clk(cpu_clk_50M), .rst(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),.pc_plus_4(pc_plus_4),
         .jump_addr_1(jump_addr_1),.jump_addr_2(jump_addr_2),
         .jump_addr_3(jump_addr_3),.jump_select(jump_select),
@@ -201,13 +201,13 @@ module MiniMIPS32(
 /************************MFC0,MTC0 begin*******************************/
         .cp0_addr(id_cp0_addr_o),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
         .id_in_delay_i(id_in_delay_i), .id_in_delay_o(id_in_delay_o),
         .id_pc_o(id_pc_o), .next_delay_o(next_delay),
         .id_exccode_o(id_exccode_o),
         .flush_im(flush_im),
         .id_exccode_i(id_exccode)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
     
     regfile regfile0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
@@ -230,13 +230,13 @@ module MiniMIPS32(
 /************************MFC0,MTC0 begin*******************************/
         .id_cp0_addr(id_cp0_addr_o), .exe_cp0_addr(exe_cp0_addr_i),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
         .id_in_delay(id_in_delay_o), .exe_in_delay(exe_in_delay_i),
         .id_pc(id_pc_o), .exe_pc(exe_pc_i),
         .next_delay_i(next_delay), .next_delay_o(id_in_delay_i),
         .id_exccode(id_exccode_o), .exe_exccode(exe_exccode_i),
 	    .flush(flush_o)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
     
     exe_stage exe_stage0(.cpu_rst_n(cpu_rst_n),
@@ -258,11 +258,11 @@ module MiniMIPS32(
         .cp0_re_o(cp0_re), .cp0_raddr_o(cp0_raddr),
 	    .cp0_we_o(exe_cp0_we_o), .cp0_waddr_o(exe_cp0_waddr_o), .cp0_wdata_o(exe_cp0_wdata_o),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
         .exe_pc_i(exe_pc_i), .exe_pc_o(exe_pc_o),
         .exe_in_delay_i(exe_in_delay_i), .exe_in_delay_o(exe_in_delay_o),
         .exe_exccode_i(exe_exccode_i), .exe_exccode_o(exe_exccode_o)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
         
     exemem_reg exemem_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
@@ -277,12 +277,12 @@ module MiniMIPS32(
         .exe_cp0_we(exe_cp0_we_o), .exe_cp0_waddr(exe_cp0_waddr_o), .exe_cp0_wdata(exe_cp0_wdata_o),
 	    .mem_cp0_we(mem_cp0_we_i), .mem_cp0_waddr(mem_cp0_waddr_i), .mem_cp0_wdata(mem_cp0_wdata_i),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
         .exe_pc(exe_pc_o), .mem_pc(mem_pc_i),
         .exe_in_delay(exe_in_delay_o), .mem_in_delay(mem_in_delay_i),
         .exe_exccode(exe_exccode_o), .mem_exccode(mem_exccode_i),
 	    .flush(flush_o)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
 
     mem_stage mem_stage0(.cpu_rst_n(cpu_rst_n), .mem_aluop_i(mem_aluop_i),
@@ -301,13 +301,13 @@ module MiniMIPS32(
 	    .cp0_we_i(mem_cp0_we_i), .cp0_waddr_i(mem_cp0_waddr_i), .cp0_wdata_i(mem_cp0_wdata_i),
         .cp0_we_o(mem_cp0_we_o), .cp0_waddr_o(mem_cp0_waddr_o), .cp0_wdata_o(mem_cp0_wdata_o),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
         .wb2mem_cp0_we(cp0_we), .wb2mem_cp0_wa(cp0_waddr), .wb2mem_cp0_wd(cp0_data_i),
         .mem_pc_i(mem_pc_i), .cp0_pc(cp0_pc_i),
         .mem_in_delay_i(mem_in_delay_i), .cp0_in_delay(cp0_in_delay_i),
         .mem_exccode_i(mem_exccode_i), .cp0_exccode(cp0_exccode_i),
         .cp0_status(status_o), .cp0_cause(cause_o)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
     	wire [31:0] de_tmp;
     memwb_reg memwb_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
@@ -323,12 +323,12 @@ module MiniMIPS32(
 	    .mem_cp0_we(mem_cp0_we_o), .mem_cp0_waddr(mem_cp0_waddr_o), .mem_cp0_wdata(mem_cp0_wdata_o),
         .wb_cp0_we(wb_cp0_we_i), .wb_cp0_waddr(wb_cp0_waddr_i), .wb_cp0_wdata(wb_cp0_wdata_i),
 /************************MFC0,MTC0 end*********************************/
-/************************“Ï≥£¥¶¿Ì begin*******************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ begin*******************************/
 	    .flush(flush_o),
         
         .de_pc_i(cp0_pc_i),
         .de_pc_o(de_tmp)
-/************************“Ï≥£¥¶¿Ì end*********************************/
+/************************ÂºÇÂ∏∏Â§ÑÁêÜ end*********************************/
     );
 
     cp0_reg cp0_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n), 

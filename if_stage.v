@@ -1,31 +1,31 @@
 `include "defines.v"
 
 module if_stage(
-    input  wire                    cpu_clk_50M,
-    input  wire                    cpu_rst_n,
+    input  wire                    clk,
+    input  wire                    rst,
     
-    // ×ªÒÆÖ¸Áî
+    // è½¬ç§»æŒ‡ä»¤
     input  wire [`INST_ADDR_BUS]   jump_addr_1,
     input  wire [`INST_ADDR_BUS]   jump_addr_2,
     input  wire [`INST_ADDR_BUS]   jump_addr_3,
     input  wire [1:0]              jump_select,
     
-    // Á÷Ë®ÏßÔİÍ£
+    // æµæ°´çº¿æš‚åœ
     input  wire [`STALL_BUS    ]   stall,
     
-    // Òì³£´¦Àí
-    input  wire                    flush, //Çå¿ÕÁ÷Ë®ÏßĞÅºÅ
-    input  wire [`INST_ADDR_BUS]   cp0_excaddr, 
+    // å¼‚å¸¸å¤„ç†
+    input  wire                    flush,
+    input  wire [`INST_ADDR_BUS]   cp0_excaddr,
     
-    // ºóÏò´«²¥
+    // åå‘ä¼ æ’­
     output reg  [`INST_ADDR_BUS]   pc,
     output wire [`INST_ADDR_BUS]   pc_plus_4,
     output wire [`EXC_CODE_BUS ]   if_exccode_o,
     
-    // ËÍÍùÖ¸Áî´æ´¢Æ÷
+    // é€å¾€æŒ‡ä»¤å­˜å‚¨å™¨
     output wire                    ice,
     output wire [`INST_ADDR_BUS]   iaddr
-    );
+);
     
     assign pc_plus_4 = pc+4;
     
@@ -39,8 +39,8 @@ module if_stage(
         endcase
     end
     
-    always @(posedge cpu_clk_50M) begin
-        if (cpu_rst_n == `CHIP_DISABLE)
+    always @(posedge clk) begin
+        if (rst == `CHIP_DISABLE)
             pc <= `PC_INIT;
         else if (flush == `TRUE_V)
             pc <= cp0_excaddr;
@@ -49,7 +49,7 @@ module if_stage(
     end
     
     assign iaddr = pc;
-    assign ice = (stall[1] == `TRUE_V || flush) ? 0 : cpu_rst_n;
+    assign ice = (stall[1] == `STOP || flush) ? 0 : rst;
     assign if_exccode_o = (pc[1:0]==2'b00) ? `EXC_NONE : `EXC_ADEL;
     
 endmodule

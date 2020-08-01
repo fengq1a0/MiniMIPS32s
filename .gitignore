@@ -1,4 +1,5 @@
 /axi_crossbar_0/*
 /cache_ram/*
+/.vscode/
 !/cache_ram/cache_ram.xci
 !/axi_crossbar_0/axi_crossbar_0.xci
