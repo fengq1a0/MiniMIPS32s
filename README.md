@@ -34,3 +34,5 @@ new
 >                        ((exe_src1_i[31] && exe_src2_i[31] && !arthres[31])||(!exe_src1_i[31] && !exe_src2_i[31] && arthres[31])) : 0;
 > ```
 
+## TODO
+* if考虑 flush 与 stall 的关系
