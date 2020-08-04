@@ -27,19 +27,19 @@ module cp0_reg(
     input  wire [`STALL_BUS   ] stall
     );
 
-	reg [`REG_BUS] badvaddr;	// CP0��badvaddr�Ĵ���
-	reg [`REG_BUS] status;		// CP0��status�Ĵ���
-	reg [`REG_BUS] cause;		// CP0��cause�Ĵ���
-	reg [`REG_BUS] epc;			// CP0��epc�Ĵ���
+	//CP0 寄存器组
+	reg [`REG_BUS] badvaddr;	
+	reg [`REG_BUS] status;		
+	reg [`REG_BUS] cause;		
+	reg [`REG_BUS] epc;			
 
 	assign status_o = status;
 	assign cause_o = cause;
 
-    // �����쳣��Ϣ���������ˮ���ź�flush
+    // 和流水线清空有关
     assign flush = (cpu_rst_n == `RST_ENABLE) ? `NOFLUSH : 
                    (exccode_i != `EXC_NONE ) ? `FLUSH : `NOFLUSH;
 
-	// ������մ�ָ��洢��IM��ȡ����ָ����ź�flush_im
     always @(posedge cpu_clk_50M) begin
         if (cpu_rst_n == `RST_ENABLE) begin
 			flush_im <= `NOFLUSH;
@@ -50,11 +50,12 @@ module cp0_reg(
 		end
     end
 
-    // �����쳣
+
+	//异常处理
     task do_exc; begin
 		if (status[1] == 0) begin
-			if(in_delay_i) begin        // �ж��쳣����ָ���Ƿ�Ϊ�ӳٲ�ָ��
-				cause[31] <= 1;   		// ��Ϊ�ӳٲ�ָ�cause[31]��Ϊ1
+			if(in_delay_i) begin        /
+				cause[31] <= 1;   		
 				epc       <= pc_i - 4;
 			end else begin	
 				cause[31] <= 0;
@@ -68,24 +69,23 @@ module cp0_reg(
 	end
 	endtask
 
-    // ����ERETָ��
+	//ERET
 	task do_eret; begin
 		status[1]   <= 0;
 	end
 	endtask
 
-	// �����쳣����������ڵ�ַ
+
 	assign cp0_excaddr = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
 						 (exccode_i == `EXC_INT   ) ? `EXC_INT_ADDR :
 						 (exccode_i == `EXC_ERET && waddr == `CP0_EPC && we == `WRITE_ENABLE) ? wdata :
 						 (exccode_i == `EXC_ERET  ) ? epc :
 						 (exccode_i != `EXC_NONE  ) ? `EXC_ADDR : `ZERO_WORD;
 
-    // ����CP0�Ĵ�������
     always @ (posedge cpu_clk_50M) begin
 		if(cpu_rst_n == `RST_ENABLE) begin
             badvaddr 	  <= `ZERO_WORD;
-            status 	      <= 32'h10000000;              // status[28]Ϊ1����ʾʹ��CP0Э������
+            status 	      <= 32'h10000000;              
             cause 	      <= `ZERO_WORD;
             epc 		  <= `ZERO_WORD;
 		end 
@@ -93,7 +93,7 @@ module cp0_reg(
         begin
 			cause[15:10] <= int_i;
 			case (exccode_i)
-				`EXC_NONE:       // ���쳣����ʱ���ж��Ƿ�Ϊд�Ĵ���ָ�д������
+				`EXC_NONE:       
 					if (we == `WRITE_ENABLE) begin
 						case(waddr)
 						 	`CP0_BADVADDR: badvaddr <= wdata;
@@ -102,15 +102,15 @@ module cp0_reg(
 						 	`CP0_EPC: epc       <= wdata;
 						endcase
 					end
-				`EXC_ERET:       // ERETָ��
+				`EXC_ERET:       
 					do_eret();
-				default:        // �쳣����ʱ��������Ӧ�쳣
+				default:        
 					do_exc();
 			endcase
 		end
 	end
 
-	// ��CP0�еļĴ���
+	//读寄存器
     assign data_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : 
                     (re != `READ_ENABLE      ) ? `ZERO_WORD :
                     (raddr == `CP0_BADVADDR  ) ? badvaddr :

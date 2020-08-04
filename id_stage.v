@@ -62,7 +62,7 @@
     output wire [`EXC_CODE_BUS ]   id_exccode_o    // 处于译码阶段的指令的异常类型编码
 );
     
-    // 如果清空信号flush_im为“1”,则取出的指令为空指令
+    // 如果清空信号flush_im为1,则取出的指令为空指令
     wire [`INST_BUS] id_inst = (flush_im == `FLUSH) ? `ZERO_WORD : id_inst_i;
     
     // 提取指令字中各个字段的信息
